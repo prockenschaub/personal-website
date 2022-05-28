@@ -1,0 +1,187 @@
+---
+title: "Graphical analysis of model stability"
+author: "Patrick Rockenschaub"
+date: 2022-05-27T12:00:00-00:00
+categories: ["R"]
+tags: ["predictive modelling", "generalisation", "model validation"]
+---
+
+
+
+<p>Predicting likely patient outcomes with machine learning has been a hot topic for several years now. The increasing collection of routine medical data have enabled the modelling of a wide range of different outcomes across varies medical specialties. This interest in data-driven diagnosis and prognosis has only further burgeoned with the arrival of the SARS-CoV-2 pandemic. Countless research groups across countries and institutions have published models that use routine data to predict everything from <a href="https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01893-3">COVID-19 related deaths</a>, escalation of care such as <a href="https://www.nature.com/articles/s41598-021-83784-y">admission to intensive care units or initiation of invasive ventilation</a>, or simply the <a href="https://erj.ersjournals.com/content/56/2/2000775.short">presence or absence of the virus</a>.</p>
+<p>Unfortunately, if there is one thing my PhD’s taught me repeatedly it’s that deriving reliable models from routine medical data is challenging (as this <a href="https://www.bmj.com/content/369/bmj.m1328">systematic review of 232 COVID-19 prediction models</a> can attest). There are many reasons why a given prediction model may not be reliable but the one I focus on in my own research — and which we will therefore discuss in more detail in this blog post — is model stability across environments. Here, environments can mean many different things but in the case of clinical prediction models, the environments of interest are often different healthcare providers (e.g., hospitals), with each provider representing a single environment in which we may want to use our model. Ideally, we would like our model to work well across many healthcare providers. If that’s the case, we can use a single model across all providers. The model may therefore be considered “stable”, “generalisable”, or “transferable”. If our models perform instead work well at only some providers but not at others, we may need to (re-)train them for each provider at which we want to use them. This not only causes additional overhead but also increases the risk of overfitting to any single provider and raises questions about the validation of each local model. Stability is therefore a desirable property of predictive models. In the remainder of this post, we will discuss the necessary conditions for stability and how we can identify likely instability in our prediction models.</p>
+<div id="who-this-post-is-for" class="section level1">
+<h1>Who this post is for</h1>
+<p>Here’s what I assume you to know:</p>
+<ul>
+<li>You’re familiar with <a href="https://www.r-project.org/">R</a> and the <a href="https://www.tidyverse.org/">tidyverse</a>.</li>
+<li>You know a little bit about fitting and evaluating linear regression models .</li>
+<li>You have a working knowledge of causal inference and Directed Acyclical Graphs (DAG). We will use DAGs to represent assumptions about our data and graphically reason about (in)stability through the backdoor criterion. If these concepts are new to you, first have a look <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">here</a> and <a href="https://www.andrewheiss.com/research/chapters/heiss-causal-inference-2021/10-causal-inference.pdf">here</a>.</li>
+</ul>
+<p>We will use the following <a href="https://www.r-project.org/">R</a> packages throughout this post:</p>
+<pre class="r"><code>library(tidyverse)
+library(ggdag)
+library(ggthemes)</code></pre>
+</div>
+<div id="model-stability" class="section level1">
+<h1>Model stability</h1>
+<p>In the introduction, I considered models stable if they worked comparable across multiple environments. While intuitive, this definition is of course very vague. Let’s spend a little more time on defining what exactly (in mathematical terms) we mean by stability. The definitions here closely follows that of <a href="https://arxiv.org/abs/1812.04597">Subbaswamy and Saria (2019)</a>, which recently introduced a (in my opinion) very neat framework to think and reason about model stability using DAGs.</p>
+<p>Take for example the relatively simple DAG introduced in <a href="https://arxiv.org/abs/1808.03253">Subbaswamy and Saria (2018)</a> and displayed in Figure <a href="#fig:example-dag">1</a>. Let’s say we want to predict T, which may represent a clinical outcome of interest such as the onset of sepsis. In our dataset, we observe two variables Y and A that we could use to predict T. The arrows between T, Y, and A denote causal relationships between these variables, i.e., both T and A causally affect the value of Y. The absence of an arrow between T and A means that these variables do not directly affect each other. However, there is a final variable D that affects both the value of T and the value of A. We display D in grey because it is not observed in our dataset (e.g., because it is not routinely recorded by the clinician). If you had courses in statistics or epidemiology, you will know D as a confounding variable.</p>
+<pre class="r"><code>coords &lt;- list(x = c(T = -1, A = 1, D = 0, Y = 0, S = 1),
+                y = c(T = 0, A = 0, D = 1, Y = -1, S = 1))
+
+dag &lt;- dagify(
+  T ~ D,
+  A ~ D + S,
+  Y ~ T + A,
+  coords = coords
+)</code></pre>
+<pre class="r"><code>ggplot(dag, aes(x, y, xend = xend, yend = yend)) + 
+  geom_dag_edges() + 
+  # prediction target:
+  geom_dag_point(data = ~ filter(., name == &quot;T&quot;), colour = &quot;darkorange&quot;) +     
+  # observed variables:
+  geom_dag_point(data = ~ filter(., name %in% c(&quot;Y&quot;, &quot;A&quot;)), colour = &quot;darkblue&quot;) + 
+  # unobserved variables:
+  geom_dag_point(data = ~ filter(., name == &quot;D&quot;), colour = &quot;grey&quot;) + 
+  # selection variable indicating a distribution that changes across environments:
+  geom_dag_point(data = ~ filter(., name == &quot;S&quot;), shape = 15) + 
+  geom_dag_text() + 
+  theme_dag()</code></pre>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:example-dag"></span>
+<img src="{{< blogdown/postref >}}index.en_files/figure-html/example-dag-1.png" alt="Directed acyclical graph specifying the causal relationships between a prediction target T, observed predictors A and Y, and an unobserved confounder D. The square node S represents a auxiliary selection variable that indicates variables that are mutable, i.e., change across different environments." width="672" />
+<p class="caption">
+Figure 1: Directed acyclical graph specifying the causal relationships between a prediction target T, observed predictors A and Y, and an unobserved confounder D. The square node S represents a auxiliary selection variable that indicates variables that are mutable, i.e., change across different environments.
+</p>
+</div>
+<p>
+ 
+</p>
+<p>So far this is a pretty standard DAG. However, there is an odd square node in this graph that we haven’t mentioned yet: the selection variable S. <a href="https://arxiv.org/abs/1812.04597">Subbaswamy and Saria (2019)</a> suggest to use the auxiliary variable S to point to any variables in our graph that may vary arbitrarily across environments. Variables referenced by S are also called <em>mutable</em> variables. By including an arrow from S to A in Figure <a href="#fig:example-dag">1</a>, we therefore claim that A is mutable and cannot be relied on in any environment that isn’t the training environment. Note that we do not make any claim as to why this variable is mutable, we merely state that its distribution may be shift across environments.</p>
+<p>Once we have defined a DAG and all its mutable variables, we can graphically check whether our predictor is unstable by looking for any active unstable paths. <a href="https://arxiv.org/abs/1812.04597">Subbaswamy and Saria (2019)</a> show that <em>the non-existence of active unstable paths is a graphical criterion for determining […] stability</em>. Easy, right? At least once we know what they mean by an active unstable path. Let’s look at it term for term:</p>
+<ul>
+<li><em>path</em>: a path is simply a sequence of nodes in which each consecutive pair of nodes is connected by an edge. Note that the direction of the edge (i.e., which way the arrow points) does not matter here. There are many different paths in Figure <a href="#fig:example-dag">1</a> such as <code>D -&gt; T -&gt; Y</code> or <code>T &lt;- D -&gt; A &lt;- S</code>.</li>
+<li><em>active</em>: whether a path is active or closed can be determined using the standard rules of d-separation to determine stability (see chapter 6 of <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">Hernán and Robins (2020)</a> for a refresher on d-separation). Roughly speaking, a path is active if it either a) contains a variable that is conditioned on by including it in the model or b) contains a collider that it is <strong>not</strong> conditioned on. For example, <code>T &lt;- D -&gt; A &lt;- S</code> is closed due to the collider <code>-&gt; A &lt;-</code> but becomes active if A is included in the model. It can be closed again by also including D in the model (if it were observed).</li>
+<li><em>unstable</em>: a path is unstable if it includes a selection variable S.</li>
+</ul>
+<p>If you have worked with DAGs before, you probably already knew about active paths. The only new thing you need to learn is to only look for those active paths that are unstable, which is easy enough to verify. You don’t even need to look at all paths, only at those that include S! So let’s do it for our example in Figure <a href="#fig:example-dag">1</a>.</p>
+</div>
+<div id="applying-the-theory-to-a-toy-example" class="section level1">
+<h1>Applying the theory to a toy example</h1>
+<p>Given the DAG in Figure <a href="#fig:example-dag">1</a>, we could use different sets of variables to predict our target variable T. For example, we could a) decide to use the observed variables A and Y, b) use Y alone, c) explore the possibility to use all variables by collecting additional data on D or d) use no predictors (i.e., always predict the average). Let’s look at those options in turn and determine whether they would result in a stable model.</p>
+<div id="use-all-observed-variables-as-predictors" class="section level2">
+<h2>Use all observed variables as predictors</h2>
+<p>A common practice in prediction modelling is to include as many variables as possible (and available). In Figure <a href="#fig:example-dag">1</a>, this would mean that we’d use A and Y to estimate the conditional probability <span class="math inline">\(P(T~\|~A, Y)\)</span>. Would such an estimate be stable? Let’s check for active unstable paths. There are two paths <code>T -&gt; Y &lt;- A &lt;- S</code> and <code>T &lt;- D -&gt; A &lt;- S</code> that include S. The first contains an open collider at <code>-&gt; Y &lt;-</code> (because it is included in the model) but it is blocked by also conditioning on A, making it closed. The second path also contains an open collider, namely at <code>-&gt; A &lt;-</code>. Since we do not observe D, this path is active and unstable.</p>
+</div>
+<div id="use-only-non-mutable-observed-variables-as-predictors" class="section level2">
+<h2>Use only non-mutable observed variables as predictors</h2>
+<p>In recent years, researchers have become mindful of the fact that some relationships may be unreliable. For example, it is not unusual to see <a href="https://arxiv.org/abs/2107.05230">models that purposefully ignore information on medication to avoid spurious relationships</a>. Following a similar line of argument, it could be tempting to remove A (which is mutable) from the model and only predict <span class="math inline">\(P(T~|~Y)\)</span>. After all, if we are not relying on mutable variables we may be safe from instability. Unfortunately, this isn’t an option either (at least not in this particular examples). If we remove A from the model, the previously blocked path <code>T -&gt; Y &lt;- A &lt;- S</code> is now open and we are again left with an unstable model.</p>
+</div>
+<div id="collect-additional-data" class="section level2">
+<h2>Collect additional data</h2>
+<p>By now, you might have thrown your hands up in despair. Neither option using the observed variables led to a stable model (note that adjusting only for A also does not solve the issue because there is still an open path via D). In our particular example, there is another possibility for a stable model if we have the time and resources to measure the previously unobserved variable D, but of course we only want to do so if it leads to a stable predictor. So is <span class="math inline">\(P(T~|~A, Y, D)\)</span> stable? It turns out it is, as both <code>T -&gt; Y &lt;- A &lt;- S</code> (by A) and <code>T &lt;- D -&gt; A &lt;- S</code> (by D) are blocked and our model will therefore be stable across environments.</p>
+</div>
+<div id="use-no-predictors" class="section level2">
+<h2>Use no predictors</h2>
+<p>What else can we do if we do not want or can’t collect data on D. One final option is always to admit defeat and simply make a prediction based on the average <span class="math inline">\(P(T)\)</span>. This estimate is stable but obviously isn’t a very good predictor. Yet what else is there left to do? Thankfully not all is lost and there are other smart things we could do to obtain a stable predictor without the need for additional data collection. I will talk about some of these options in my next posts.</p>
+</div>
+</div>
+<div id="testing-the-theory" class="section level1">
+<h1>Testing the theory</h1>
+<p>Up to now, we have used theory to determine whether a particular model would result in a stable predictor. In this final section, we simulate data for Figure <a href="#fig:example-dag">1</a> to test our conclusions and confirm the (lack of) stability of all models considered above. Following the example in <a href="https://arxiv.org/abs/1808.03253">Subbaswamy and Saria (2018)</a>, we use simple linear relationships and Gaussian noise for all variables, giving the following structural equations:</p>
+<p><span class="math display">\[
+\begin{aligned}
+D &amp;\sim N(0, \sigma^2) \\
+T &amp;\sim N(\beta_1D, \sigma^2) \\
+A &amp;\sim N(\beta_2^eD, \sigma^2) \\
+Y &amp;\sim N(\beta_3T + \beta_4A, \sigma^2)
+\end{aligned}
+\]</span></p>
+<p>You might have noticed the superscript <span class="math inline">\(e\)</span> in <span class="math inline">\(\beta^e_2\)</span>. We use this superscript to indicate that the coefficient depends on the environment <span class="math inline">\(e \in \mathcal{E} \}\)</span> where <span class="math inline">\(\mathcal{E}\)</span> is the set of all possible environments. Since the value of the coefficient depends on the environment, A is mutable (note that we could have chosen other ways to make A mutable, for example by including another unobserved variable that influences A and changes across environments). All other coefficients are constant across environments, i.e., <span class="math inline">\(\beta_i^e = \beta_i\)</span> for <span class="math inline">\(i \in \{1, 3, 4 \}\)</span>. Finally, we set a uniform noise <span class="math inline">\(\sigma^2=0.1\)</span> for all variables. We combine this into a function that draws a sample of size <span class="math inline">\(n\)</span>.</p>
+<pre class="r"><code>simulate_data &lt;- function(n, beta, dev = 0) {
+  noise &lt;- sqrt(0.1) # rnorm is parameterised as sigma instead of sigma^2
+  
+  D &lt;- rnorm(n, sd = noise)
+  T &lt;- rnorm(n, beta[1] * D, sd = noise)
+  A &lt;- rnorm(n, (beta[2] + dev) * D, sd = noise)
+  Y &lt;- rnorm(n, beta[3] * T + beta[4] * A, sd = noise)
+  
+  tibble(D, T, A, Y)
+}
+
+set.seed(42)
+n &lt;- 30000
+
+# Choose coefficients
+beta &lt;- vector(&quot;numeric&quot;, length = 4)
+beta[2] &lt;- 2                  # we manually set beta_2 and vary it by env
+beta[c(1, 3, 4)] &lt;- rnorm(3)  # we randomly draw values for the other betas
+
+cat(&quot;Betas: &quot;, beta)</code></pre>
+<pre><code>## Betas:  1.370958 2 -0.5646982 0.3631284</code></pre>
+<p>We will define model performance in terms of the mean squared error (MSE) <span class="math inline">\(n^{-1} \sum_{i=1}^n (t_i - \hat t_i)^2\)</span>, where <span class="math inline">\(t_i\)</span> is the true value of T for patient <span class="math inline">\(i\)</span> and <span class="math inline">\(\hat t_i\)</span> is the estimate given by our model. The function <code>fit_and_eval()</code> fits a linear regression model to the training data and returns its MSE on some test data. By varying <span class="math inline">\(\beta^{e}_2\)</span> in the test environment, we can test how our models perform when the coefficient deviates more and more from the value seen in our training environment.</p>
+<pre class="r"><code>mse &lt;- function(y, y_hat){
+  mean((y - y_hat) ^ 2)
+}
+
+fit_and_eval &lt;- function(formula, train, test) {
+  fit &lt;- lm(formula, data = train)
+  pred &lt;- predict(fit, test)
+  mse(test$T, pred)
+}</code></pre>
+<p>Now that we’ve defined everything we need to run our simulation, let’s see how our models fare. Since we are only running linear regressions that are easy to compute, we can set the number of samples to a high value (N=30,000) to get stable results. The performance of our four models across the range of <span class="math inline">\(\beta_2\)</span> can be seen in Figure <a href="#fig:run-simulations">2</a>. Our simulations appear to confirm our theoretical analysis. The full model <code>M3</code> (blue) retains a stable performance across all considered <span class="math inline">\(\beta_2\)</span>’s. <code>M1</code> and <code>M2</code> on the other hand have U-shaped performance curves that depend on the value of <span class="math inline">\(\beta_2\)</span> in the test environment. When <span class="math inline">\(\beta_2\)</span> is close to the value in the training environment (vertical grey line), <code>M1</code> achieves a performance that is almost as good as that of the full model <code>M3</code>. However, as the coefficient deviates from its value in the training environment, model performance quickly deteriorates and even becomes worse than simply using the global average (<code>M4</code> green line).</p>
+<pre class="r"><code># Training environment (always the same)
+train &lt;- simulate_data(n, beta)
+
+# Test environments (beta_2 deviates from training env along a grid)
+grid_len &lt;- 100L
+all_obs &lt;- only_y &lt;- add_d &lt;- no_pred &lt;- vector(&quot;numeric&quot;, grid_len)
+devs &lt;- seq(-12, 4, length.out = grid_len)
+
+for (i in 1:grid_len) {
+  # Draw test environment
+  test &lt;- simulate_data(n, beta, dev = devs[i])
+  
+  # Fit each model
+  all_obs[i] &lt;- fit_and_eval(T ~ Y + A    , train, test)
+  only_y[i]  &lt;- fit_and_eval(T ~ Y        , train, test)
+  add_d[i]   &lt;- fit_and_eval(T ~ Y + A + D, train, test)
+  no_pred[i] &lt;- fit_and_eval(T ~ 1        , train, test)
+}
+
+results &lt;- tibble(devs, all_obs, only_y, add_d, no_pred)
+
+
+ggplot(results, aes(x = beta[2] + devs)) + 
+  geom_vline(xintercept = beta[2], colour = &quot;darkgrey&quot;, size = 1) + 
+  geom_point(aes(y = all_obs, colour = &quot;M1: all observed variables&quot;), size = 2) + 
+  geom_point(aes(y = only_y, colour = &quot;M2: non-mutable variables&quot;), size = 2) + 
+  geom_point(aes(y = add_d, colour = &quot;M3: additional data&quot;), size = 2) + 
+  geom_point(aes(y = no_pred, colour = &quot;M4: no predictor&quot;), size = 2) + 
+  scale_colour_colorblind() + 
+  labs(
+    x = expression(beta[2]),
+    y = &quot;Mean squared error\n&quot;
+  ) +
+  coord_cartesian(ylim = c(0, 0.5), expand = FALSE) + 
+  theme_bw() + 
+  theme(
+    panel.grid = element_blank()
+  )</code></pre>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:run-simulations"></span>
+<img src="{{< blogdown/postref >}}index.en_files/figure-html/run-simulations-1.png" alt="Mean squared error of all models across a range of test environments that differ in the coefficient for the relationship D -&gt; A. The vertical grey line indicates the training environment." width="672" />
+<p class="caption">
+Figure 2: Mean squared error of all models across a range of test environments that differ in the coefficient for the relationship D -&gt; A. The vertical grey line indicates the training environment.
+</p>
+</div>
+<p>I have to admit I was surprised by the results for <code>M2</code>, which I expected to be similar to but slightly worse than <code>M1</code>. Instead of a minimum close to the training environment, however, <code>M2</code> achieved its best performance far away at <span class="math inline">\(\beta_2 \approx -7.5\)</span> whereas the performance in the training environment was barely better than using no predictors. Its <span class="math inline">\(R^2\)</span> was only 0.093 compared to 0.672 for <code>M1</code> and 0.741 for <code>M3</code>. The reason for this seems to be a very low variance of Y given the particular set of <span class="math inline">\(\beta\)</span>’s chosen. As the value of <span class="math inline">\(\beta_2\)</span> decreases the variance of Y and its covariance with D and T changes such that it becomes a better predictor of T (and even crowds out the “direct” effect of D due to the active backdoor path <code>D -&gt; A -&gt; Y &lt;- T</code>).</p>
+<p>Finally, note that the scale of the curves in Figure <a href="#fig:run-simulations">2</a> depends on the values chosen for <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, and <span class="math inline">\(\beta_4\)</span>. The shape of the curves and the overall conclusions remain the same, though.</p>
+</div>
+<div id="note-on-patient-mix" class="section level1">
+<h1>Note on patient mix</h1>
+<p>So far I’ve acted as if incorrectly estimated model coefficients are the only reason for changes in performance across environments. However, if you’ve ever performed (or read about) external validation of clinical prediction models, you may by now be shouting at your screen that there are other reasons for performance changes. In fact, even if our model is specified perfectly (i.e., all coefficients are estimated with their true causal values) it may not always be possible to achieve the same performance across environments. I discussed in a <a href="https://www.patrick-rockenschaub.com/posts/2021/11/contextual-nature-of-auc/">previous post</a> how the AUC may change depending on the make-up of your target population even if we know the exact model that generated the data. The same general principle is true for MSE. Some patients may simply be harder to predict than others and if your population contains more of one type of patients than the other, average performance of your model may change (though model performance remains the same for each individual patient assuming your coefficients are correct!). The make-up of your population is often referred to as patient mix. In our case, patient mix remained stable across environments (we did not change <code>D -&gt; T</code>). I chose this setup to focus on the effects of a mutable variables when estimating model parameters. However, thinking hard about your patient mix becomes indispensable when transferring our model to new populations. If you want to read up further on this topic, I can recommend chapter 19 of <a href="https://link.springer.com/book/10.1007/978-0-387-77244-8">Ewout Steyerberg’s book on Clinical Prediction Models</a> which includes some general advice on how to distinguish changes in patient mix from issues of model misspecification.</p>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
+<p>The structure of this post (and likely all future posts) was inspired by the great posts on <a href="https://www.andrewheiss.com/">Andrew Heiss’ blog</a> and in particular his posts on <a href="https://www.andrewheiss.com/blog/2021/12/18/bayesian-propensity-scores-weights/">inverse probability weighting in Bayesian models</a> and the <a href="https://www.andrewheiss.com/blog/2021/09/07/do-calculus-backdoors/">derivation of the trhee rules of do-calculus</a>. Andrew is an assistant professor in the Department of Public Management and Policy at Georgia State University, teaching on causal inference, statistics, and data science. His posts on these topics have been a joy to read and I am striving to make mine as effortlessly educational.</p>
+</div>
