@@ -16,6 +16,7 @@ highlight_name: true
 interests:
 - Statistical Learning
 - Domain generalisation
+- Missing data
 - Electronic health records 
 organizations:
 - name: Charite - University Medicine Berlin
@@ -24,7 +25,7 @@ role: Humboldt postdoc fellow
 social:
 - icon: envelope
   icon_pack: fas
-  link: /#contact
+  link: mailto:rockenschaub.patrick@gmail.com
 - icon: twitter
   icon_pack: fab
   link: https://twitter.com/p_rocken
