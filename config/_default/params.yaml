@@ -43,7 +43,7 @@ header:
 
 footer:
   copyright:
-    notice: '© 2022 Patrick Rockenschaub. This work is licensed under the MIT License'
+    notice: '© 2022 Patrick Rockenschaub. This work is licensed under'
     license:
       enable: true
       allow_derivatives: false
