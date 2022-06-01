@@ -1,6 +1,8 @@
 ---
 title: "Implementing the optimism-adjusted bootstrap with tidymodels"
-author: "Patrick Rockenschaub"
+summary: "The optimism-adjusted bootstrap is a resampling technique used to obtain unbiased estimates of future prediction model performance. Although popular in biomedical sciences, it is not currently implemented in the R tidymodels ecosystem. This post introduces the method and provides a step-by-step implementation with tidymodels."
+authors: 
+  - patrick
 date: 2022-01-26T12:00:00-00:00
 categories: ["R"]
 tags: ["predictive modelling", "model validation", "tidymodels"]
@@ -269,11 +271,11 @@ outer <- vfold_cv(ames, v = 5, repeats = 1)
 outer <- outer %>% 
   mutate(
     opt = splits %>% 
-      map(~ calculate_optimism_adjusted(training(.), formula, preproc, 10L)),
+      map(~ calculate_optimism_adjusted(training(.), formula, preproc, 100L)),
     cv = splits %>% 
-      map(~ calculate_repeated_cv(training(.), formula, preproc, repeats = 1L)), 
+      map(~ calculate_repeated_cv(training(.), formula, preproc, repeats = 10L)), 
     bs = splits %>% 
-      map(~ calculate_standard_bs(training(.), formula, preproc, 10L)), 
+      map(~ calculate_standard_bs(training(.), formula, preproc, 100L)), 
     test = splits %>% 
       map_dbl(~ eval_test(training(.), testing(.), formula, preproc))
   )

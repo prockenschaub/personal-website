@@ -1,6 +1,8 @@
 ---
 title: "Implementing the optimism-adjusted bootstrap with tidymodels"
-author: "Patrick Rockenschaub"
+summary: "The optimism-adjusted bootstrap is a resampling technique used to obtain unbiased estimates of future prediction model performance. Although popular in biomedical sciences, it is not currently implemented in the R tidymodels ecosystem. This post introduces the method and provides a step-by-step implementation with tidymodels."
+authors: 
+  - patrick
 date: 2022-01-26T12:00:00-00:00
 categories: ["R"]
 tags: ["predictive modelling", "model validation", "tidymodels"]
@@ -227,11 +229,11 @@ calculate_standard_bs &lt;- function(train_data, formula, preproc, n_resamples =
 outer &lt;- outer %&gt;% 
   mutate(
     opt = splits %&gt;% 
-      map(~ calculate_optimism_adjusted(training(.), formula, preproc, 10L)),
+      map(~ calculate_optimism_adjusted(training(.), formula, preproc, 100L)),
     cv = splits %&gt;% 
-      map(~ calculate_repeated_cv(training(.), formula, preproc, repeats = 1L)), 
+      map(~ calculate_repeated_cv(training(.), formula, preproc, repeats = 10L)), 
     bs = splits %&gt;% 
-      map(~ calculate_standard_bs(training(.), formula, preproc, 10L)), 
+      map(~ calculate_standard_bs(training(.), formula, preproc, 100L)), 
     test = splits %&gt;% 
       map_dbl(~ eval_test(training(.), testing(.), formula, preproc))
   )</code></pre>
@@ -258,9 +260,9 @@ tibble(method = c(&quot;opt&quot;, &quot;cv&quot;, &quot;bs&quot;)) %&gt;%
 <pre><code>## # A tibble: 3 × 5
 ##   method rsmpl_lower rsmpl_mean rsmpl_upper test_mean
 ##   &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
-## 1 opt          0.171      0.178       0.185     0.179
-## 2 cv           0.152      0.177       0.202     0.179
-## 3 bs           0.173      0.182       0.191     0.179</code></pre>
+## 1 opt          0.175      0.178       0.180     0.179
+## 2 cv           0.170      0.177       0.184     0.179
+## 3 bs           0.179      0.182       0.186     0.179</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>

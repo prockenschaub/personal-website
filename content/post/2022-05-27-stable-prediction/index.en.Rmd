@@ -1,6 +1,8 @@
 ---
 title: "Graphical analysis of model stability"
-author: "Patrick Rockenschaub"
+summary: "Stability is a desirable property of clinical prediction models that can allow us to transfer models to new environments such as different hospitals or countries. In this post, we will look at how Directed Acyclic Graphs and causal reasoning can help us anticipte if a given prediction model is stable when moved between environments."
+authors:
+  - patrick
 date: 2022-05-27T12:00:00-00:00
 categories: ["R"]
 tags: ["predictive modelling", "generalisation", "model validation"]

@@ -1,6 +1,8 @@
 ---
 title: "Contextual nature of AUC"
-author: "Patrick Rockenschaub"
+summary: "The area under the receiver operating characteristic (AUC) is arguably among the most frequently used measures of classification performance. In this post, I look at how performance estimated by AUC changes based on the covariate distribution in the evaluation set, even if we know the true model. This complicates the interpretation of external validation results if a change in this distribution is possible or even likely."
+authors: 
+  - patrick
 date: 2021-11-26T21:13:14-05:00
 categories: ["R"]
 tags: ["predictive modelling", "generalisation", "model validation"]
