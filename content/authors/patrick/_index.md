@@ -15,13 +15,13 @@ email: "rockenschaub.patrick@gmail.com"
 highlight_name: true
 interests:
 - Statistical Learning
-- Domain generalisation
 - Missing data
 - Electronic health records 
+- Validation of medical AI
 organizations:
-- name: Charite - University Medicine Berlin
-  url: https://claim.charite.de/en
-role: Humboldt postdoc fellow
+- name: Medical University Innsbruck
+  url: https://clinicalepi.i-med.ac.at/
+role: Postdoctoral researcher
 social:
 - icon: envelope
   icon_pack: fas
@@ -42,7 +42,7 @@ superuser: true
 title: Patrick Rockenschaub
 ---
 
-I'm a postdoctoral researcher in the [Charité Lab for AI in Medicine (CLAIM)](https://claim.charite.de/en/) at the [Charité University Medicine Berlin](https://www.charite.de/en/). I'm additionally affiliated with the [QUEST Center for Responsible Research](https://www.bihealth.org/en/translation/innovation-enabler/quest-center) at the [Berlin Institute of Health](https://www.bihealth.org/en/). 
+I'm a postdoctoral researcher at the [Department for Medical Statistics, Informatics and Health Economics](https://clinicalepi.i-med.ac.at/) at the [Medical University Innsbruck](https://www.i-med.ac.at/). Before coming to Innsbruck, I held postdoc positions at the [Fraunhofer Institute for Cognitive Systems]() in Munich and the [Charité Lab for AI in Medicine (CLAIM)](https://claim.charite.de/en/) in Berlin. 
 
-My research focus is on creating and deploying predictive models that derive insights from complex healthcare data and help doctor’s make informed decisions. In particular, I am interested in how data heterogeneity and missing data --- both ubiquitous in routine medical data --- impact the performance of such models over time and at new healthcare sites. In my postdoc project, I am specifically looking at the stability of model-based early warning scores in intensive care settings and how approaches such as [invariant learning](https://arxiv.org/abs/1907.02893) or [graphical analysis](https://arxiv.org/abs/1905.11374) may improve said stability.
+My research focus is on understanding if and when we can rely on predictive models that derive insights from complex healthcare data and help doctor’s make informed decisions. In particular, I am interested in how data heterogeneity and missing data --- both ubiquitous in real-world medical practice --- impact the performance of such models over time and at new healthcare sites. 
 
