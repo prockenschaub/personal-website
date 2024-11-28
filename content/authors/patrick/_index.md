@@ -19,8 +19,8 @@ interests:
 - Electronic health records 
 - Validation of medical AI
 organizations:
-- name: Medical University Innsbruck
-  url: https://clinicalepi.i-med.ac.at/
+- name: Medical University of Innsbruck
+  url: https://epicenter.i-med.ac.at/
 role: Postdoctoral researcher
 social:
 - icon: envelope
