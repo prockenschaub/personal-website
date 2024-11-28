@@ -40,4 +40,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*J. Antimicrob. Chemother.*'
+links:
+- name: Paper
+  url: https://academic.oup.com/jac/article/75/1/243/5584403
 ---

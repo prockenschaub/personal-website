@@ -49,4 +49,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*Wellcome Open Res*'
+links:
+- name: Paper
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC7014923/
 ---

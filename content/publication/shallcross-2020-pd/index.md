@@ -39,4 +39,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*PLoS Med.*'
+links:
+- name: Paper
+  url: https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1003336
 ---

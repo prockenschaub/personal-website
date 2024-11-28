@@ -38,4 +38,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*Epidemiol. Infect.*'
+links:
+- name: Paper
+  url: https://www.cambridge.org/core/journals/epidemiology-and-infection/article/relationship-between-clinical-outcomes-and-empirical-antibiotic-therapy-in-patients-with-communityonset-gramnegative-bloodstream-infections-a-cohort-study-from-a-large-teaching-hospital/A61E504241557048FD50EF9F93103849
 ---

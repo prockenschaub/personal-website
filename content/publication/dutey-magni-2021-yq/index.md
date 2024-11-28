@@ -65,4 +65,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*JAC Antimicrob Resist*'
+links:
+- name: Paper
+  url: https://academic.oup.com/jacamr/article/3/1/dlab018/6158273
 ---

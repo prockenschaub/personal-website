@@ -35,4 +35,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*Pharmacoepidemiol. Drug Saf.*'
+links:
+- name: Paper
+  url: https://onlinelibrary.wiley.com/doi/full/10.1002/pds.4367
 ---

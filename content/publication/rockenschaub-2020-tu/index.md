@@ -39,4 +39,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*BMJ Open*'
+links:
+- name: Paper
+  url: https://bmjopen.bmj.com/content/10/2/e034396.abstract
 ---

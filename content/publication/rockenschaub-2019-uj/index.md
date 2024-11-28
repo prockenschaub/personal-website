@@ -35,4 +35,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*Clin. Infect. Dis.*'
+links:
+- name: Paper
+  url: https://academic.oup.com/cid/article/71/7/e50/5601268
 ---

@@ -38,4 +38,7 @@ publication_types:
 - '2'
 abstract: ''
 publication: '*BMC Emerg. Med.*'
+links:
+- name: Paper
+  url: https://link.springer.com/article/10.1186/s12873-020-00333-y
 ---
