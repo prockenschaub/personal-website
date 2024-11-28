@@ -43,7 +43,7 @@ header:
 
 footer:
   copyright:
-    notice: '© 2023 Patrick Rockenschaub. This work is licensed under'
+    notice: '© 2024 Patrick Rockenschaub. This work is licensed under'
     license:
       enable: true
       allow_derivatives: false
