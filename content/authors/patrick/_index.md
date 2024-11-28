@@ -42,7 +42,7 @@ superuser: true
 title: Patrick Rockenschaub
 ---
 
-I'm a postdoctoral researcher at the [Department for Medical Statistics, Informatics and Health Economics](https://clinicalepi.i-med.ac.at/) at the [Medical University Innsbruck](https://www.i-med.ac.at/). Before coming to Innsbruck, I held postdoc positions at the [Fraunhofer Institute for Cognitive Systems]() in Munich and the [Charité Lab for AI in Medicine (CLAIM)](https://claim.charite.de/en/) in Berlin. 
+I'm a postdoctoral researcher at the [Institute of Clinical Epidemiology, Public Health, Health Economics, Medical Statistics and Informatics (EPICENTER)](https://epicenter.i-med.ac.at/) at the [Medical University Innsbruck](https://www.i-med.ac.at/). Before coming to Innsbruck, I held postdoc positions at the [Fraunhofer Institute for Cognitive Systems]() in Munich and the [Charité Lab for AI in Medicine (CLAIM)](https://claim.charite.de/en/) in Berlin. 
 
 My research focus is on understanding if and when we can rely on predictive models that derive insights from complex healthcare data and help doctor’s make informed decisions. In particular, I am interested in how data heterogeneity and missing data --- both ubiquitous in real-world medical practice --- impact the performance of such models over time and at new healthcare sites. 
 
