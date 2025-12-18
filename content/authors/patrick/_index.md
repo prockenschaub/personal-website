@@ -1,34 +1,15 @@
 ---
-bio: My research interests include predictive modelling, causal inference, and missing data imputation.
-education:
-  courses:
-  - course: PhD in Health Data Science
-    institution: University College London
-    year: 2021
-  - course: MSc in Health Data Science
-    institution: University College London
-    year: 2016
-  - course: BSc in Economics
-    institution: Vienna University of Economics and Business
-    year: 2015
+bio: My work focuses on building foundation models for ICU time-series data — models that can generalise across hospitals and patient populations to support real-time clinical decisions.
 email: "rockenschaub.patrick@gmail.com"
 highlight_name: true
-interests:
-- Statistical Learning
-- Missing data
-- Electronic health records 
-- Validation of medical AI
 organizations:
 - name: Medical University of Innsbruck
   url: https://epicenter.i-med.ac.at/
-role: Postdoctoral researcher
+role: Group Leader
 social:
 - icon: envelope
   icon_pack: fas
-  link: mailto:rockenschaub.patrick@gmail.com
-- icon: twitter
-  icon_pack: fab
-  link: https://twitter.com/p_rocken
+  link: mailto:patrick.rockenschaub@i-med.ac.at
 - icon: graduation-cap
   icon_pack: fas
   link: https://scholar.google.com/citations?user=1BEClqkAAAAJ&hl=en
@@ -37,12 +18,18 @@ social:
   link: https://github.com/prockenschaub
 - icon: linkedin
   icon_pack: fab
-  link: https://uk.linkedin.com/in/patrick-rockenschaub-27383756
+  link: https://linkedin.com/in/prockenschaub
 superuser: true
 title: Patrick Rockenschaub
+avatar:
+  shape: circle
+  size: 100
 ---
 
-I'm a postdoctoral researcher at the [Institute of Clinical Epidemiology, Public Health, Health Economics, Medical Statistics and Informatics (EPICENTER)](https://epicenter.i-med.ac.at/) at the [Medical University Innsbruck](https://www.i-med.ac.at/). Before coming to Innsbruck, I held postdoc positions at the [Fraunhofer Institute for Cognitive Systems]() in Munich and the [Charité Lab for AI in Medicine (CLAIM)](https://claim.charite.de/en/) in Berlin. 
+I lead a research group on AI for clinical decision support in intensive care at the [Medical University of Innsbruck](https://www.i-med.ac.at/).
 
-My research focus is on understanding if and when we can rely on predictive models that derive insights from complex healthcare data and help doctor’s make informed decisions. In particular, I am interested in how data heterogeneity and missing data --- both ubiquitous in real-world medical practice --- impact the performance of such models over time and at new healthcare sites. 
+My research focuses on building machine learning models that work reliably in real clinical environments — across different hospitals, patient populations, and over time. I'm particularly interested in how we can leverage large-scale ICU data to develop foundation models that generalise beyond the settings they were trained on.
 
+Starting February 2026, I'm the PI of [GPT-MEDIC](), a €1.5M ERC Starting Grant to develop and validate multicentre foundation models for ICU time-series data. I also coordinate MUI's participation in [INDICATE](https://indicate-europe.eu/), a consortium building federated data infrastructure for intensive care across Europe.
+
+Before joining Innsbruck, I was a Humboldt Research Fellow at Charité &ndash; Universitätsmedizin Berlin, where I worked on EHR-based early warning scores for ICU settings. I also worked on trustworthy AI methods at Fraunhofer IKS in Munich and as a medical statistician at Sensyne Health in Oxford. I hold a PhD in Health Data Science from University College London.
