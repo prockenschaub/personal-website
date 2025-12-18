@@ -2,7 +2,7 @@
 title: GPT-MEDIC
 summary: Foundation models for ICU time-series data. ERC Starting Grant.
 tags: []
-date: '2026-02-01'
+date: '2025-12-01'
 profile: false
 share: false
 
