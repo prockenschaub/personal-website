@@ -1,3 +1,9 @@
+---
+title: "PhD Position: Generative Foundation Models for ICU Data"
+type: page
+share: false
+---
+
 # PhD Position: Generative Foundation Models for ICU Data
 
 **Project:** GPT-MEDIC (ERC Starting Grant)  
