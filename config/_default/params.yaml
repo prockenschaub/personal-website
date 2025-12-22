@@ -10,6 +10,7 @@ appearance:
   theme_night: dark
   font: modern
   font_size: M
+  icon: icon.png
 
 # SEO
 
@@ -18,7 +19,7 @@ marketing:
     site_type: Person
     local_business_type: ''
     org_name: ''
-    description: 'Personal website and blog of Patrick Rockenschaub.'
+    description: 'Personal website of Patrick Rockenschaub.'
     twitter: 'p_rocken'
   analytics:
     google_analytics: ''
