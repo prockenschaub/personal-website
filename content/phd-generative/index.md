@@ -4,8 +4,6 @@ type: page
 share: false
 ---
 
-# PhD Position: Generative Foundation Models for ICU Data
-
 **Project:** GPT-MEDIC (ERC Starting Grant)  
 **Host:** Institute of Clinical Epidemiology, Public Health, Health Economics, Medical Statistics and Informatics (EPICENTER), Medical University of Innsbruck  
 **Supervisor:** Patrick Rockenschaub  
