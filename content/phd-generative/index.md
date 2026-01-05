@@ -40,4 +40,4 @@ Working language is **English** (German not required). You will be expected to r
 
 Email **Patrick Rockenschaub** ([patrick.rockenschaub@i-med.ac.at](mailto:patrick.rockenschaub@i-med.ac.at)) with your CV, a GitHub repo or code sample, and a short cover letter explaining why your background is a good fit for this project.
 
-**Deadline:** 18 January 2026
+**Deadline:** 25 January 2026
