@@ -30,6 +30,6 @@ I lead a research group on AI for clinical decision support in intensive care at
 
 My research focuses on building machine learning models that work reliably in real clinical environments — across different hospitals, patient populations, and over time. I'm particularly interested in how we can leverage large-scale ICU data to develop foundation models that generalise beyond the settings they were trained on.
 
-Starting February 2026, I'm the PI of [GPT-MEDIC](), a €1.5M ERC Starting Grant to develop and validate multicentre foundation models for ICU time-series data. I also coordinate MUI's participation in [INDICATE](https://indicate-europe.eu/), a consortium building federated data infrastructure for intensive care across Europe.
+Starting February 2026, I'm the PI of [GPT-MEDIC](/project/gpt-medic), a €1.5M ERC Starting Grant to develop and validate multicentre foundation models for ICU time-series data. I also coordinate MUI's participation in [INDICATE](https://indicate-europe.eu/), a consortium building federated data infrastructure for intensive care across Europe.
 
 Before joining Innsbruck, I was a Humboldt Research Fellow at Charité &ndash; Universitätsmedizin Berlin, where I worked on EHR-based early warning scores for ICU settings. I also worked on trustworthy AI methods at Fraunhofer IKS in Munich and as a medical statistician at Sensyne Health in Oxford. I hold a PhD in Health Data Science from University College London.
