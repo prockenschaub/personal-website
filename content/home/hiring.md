@@ -19,4 +19,4 @@ design:
 
 <p style="font-size: 1.25rem;"><strong>I'm recruiting PhD students.</strong></p>
 
-Interested in clinical ML, foundation models, or ICU data? See the <a href="/phd-generative/">open position</a> or get in [touch](mailto:patrick.rockenschaub@i-med.ac.at).
+Interested in clinical ML, foundation models, or ICU data? Get in [touch](mailto:patrick.rockenschaub@i-med.ac.at).
