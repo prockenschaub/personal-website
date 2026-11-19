@@ -15,3 +15,9 @@ command = 'hugo -F -b $DEPLOY_PRIME_URL'
 [context.production]
 [context.production.environment]
 HUGO_ENV = 'production'
+
+# Keep links to the retired PhD vacancy usable.
+[[redirects]]
+from = '/phd-generative'
+to = '/'
+status = 301
