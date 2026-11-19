@@ -17,6 +17,4 @@ design:
   css_class: text-center
 ---
 
-<p style="font-size: 1.25rem;"><strong>I'm recruiting PhD students.</strong></p>
-
 Interested in clinical ML, foundation models, or ICU data? Get in [touch](mailto:patrick.rockenschaub@i-med.ac.at).
